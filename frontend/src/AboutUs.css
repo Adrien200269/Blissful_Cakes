@@ -1,0 +1,130 @@
+/* About Us Page Styles */
+.aboutus-main {
+  min-height: 100vh;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1rem;
+}
+
+.aboutus-card {
+  background: #fff;
+  border-radius: 1rem;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+  max-width: 900px;
+  width: 100%;
+  padding: 2.5rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.aboutus-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.aboutus-text {
+  flex: 2;
+  animation: fade-in 0.8s ease-out 0.2s both;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.aboutus-text h1 {
+  font-family: 'Times New Roman', serif;
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+  color: #111;
+  position: relative;
+  letter-spacing: 1px;
+  text-align: left;
+  z-index: 1;
+}
+
+.aboutus-text h1::after {
+  content: "";
+  display: block;
+  width: 80px;
+  height: 6px;
+  margin-top: 0.5rem;
+  border-radius: 4px;
+  background: linear-gradient(90deg, #ec4899, #9333ea);
+  margin-left: 0;
+  z-index: 2;
+}
+
+.aboutus-text p {
+  font-size: 1.1rem;
+  color: #444;
+  margin-bottom: 1rem;
+  line-height: 1.7;
+}
+
+.aboutus-contact {
+  margin-top: 2rem;
+  background: #fff;
+  border-radius: 0.75rem;
+  box-shadow: 0 2px 12px rgba(236,72,153,0.08);
+  border: 1.5px solid #f3e8ff;
+  padding: 1.5rem 1.25rem;
+  max-width: 350px;
+  color: #22223b;
+}
+
+.aboutus-contact h2 {
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin-bottom: 0.75rem;
+  background: linear-gradient(90deg, #ec4899, #9333ea);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-fill-color: transparent;
+  letter-spacing: 0.5px;
+}
+
+.aboutus-contact p {
+  margin-bottom: 0.5rem;
+  color: #22223b;
+  font-size: 1.08rem;
+  font-weight: 500;
+}
+
+.aboutus-logo {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.aboutus-logo img {
+  width: 200px;
+  height: 200px;
+  object-fit: contain;
+  border-radius: 50%;
+  background: #fdf2f8;
+  box-shadow: 0 2px 12px rgba(236,72,153,0.08);
+}
+
+@media (min-width: 768px) {
+  .aboutus-content {
+    flex-direction: row;
+    align-items: center;
+  }
+  .aboutus-text {
+    padding-right: 2rem;
+  }
+}
