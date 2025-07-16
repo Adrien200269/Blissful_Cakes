@@ -20,6 +20,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/api/auth', require('./route/auth/authRoute'));
 app.use('/api/user', require('./route/user/userRoute'));
 app.use('/api/upload', require('./route/uploadRoutes'));
+app.use('/api/products', require('./route/productsRoute'));
 
 // Basic route
 app.get('/', (req, res) => {

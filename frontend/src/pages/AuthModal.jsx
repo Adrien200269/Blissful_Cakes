@@ -5,17 +5,22 @@ import { Button } from '../components/ui/button';
 import SignInForm from '../components/ui/SignInForm';
 import SignUpForm from '../components/ui/SignUpForm';
 import ForgotPasswordForm from '../components/ui/ForgotPasswordForm';
+import AdminLoginForm from '../components/ui/AdminLoginForm';
 
 const AuthModal = ({ setShowAuthModal, setUser, Cookies }) => {
-  const [authMode, setAuthMode] = useState('signIn');
+  const [authMode, setAuthMode] = useState('signIn'); // 'signIn', 'signUp', 'admin'
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({ username: '', email: '', password: '' });
+  const [adminFormData, setAdminFormData] = useState({ email: '', password: '' });
   const [forgotPasswordMode, setForgotPasswordMode] = useState(false);
   const [forgotPasswordEmail, setForgotPasswordEmail] = useState('');
   const [forgotPasswordSent, setForgotPasswordSent] = useState(false);
 
   const handleInputChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+  const handleAdminInputChange = (e) => {
+    setAdminFormData({ ...adminFormData, [e.target.name]: e.target.value });
   };
 
   const handleAuthSubmit = async (e) => {
@@ -45,6 +50,35 @@ const AuthModal = ({ setShowAuthModal, setUser, Cookies }) => {
     }
   };
 
+  const handleAdminLogin = async (e) => {
+    e.preventDefault();
+    try {
+      // For now, use the same endpoint as user login
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(adminFormData)
+      });
+      const data = await res.json();
+      if (!res.ok || !data.data || !data.data.token) {
+        alert(data.message || 'Admin authentication failed');
+        return;
+      }
+      // Optionally, check if user is admin (role check)
+      if (data.data.user.role !== 'admin') {
+        alert('You are not authorized as admin.');
+        return;
+      }
+      Cookies.set('auth_token', data.data.token, { expires: 7 });
+      Cookies.set('user', JSON.stringify(data.data.user), { expires: 7 });
+      setUser(data.data.user);
+      setShowAuthModal(false);
+      setAdminFormData({ email: '', password: '' });
+    } catch (err) {
+      alert('An error occurred. Please try again.');
+    }
+  };
+
   const handleForgotPasswordSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -59,10 +93,14 @@ const AuthModal = ({ setShowAuthModal, setUser, Cookies }) => {
     }
   };
 
-  const toggleAuthMode = () => {
-    setAuthMode(authMode === 'signIn' ? 'signUp' : 'signIn');
+  const toggleAuthMode = (mode) => {
+    setAuthMode(mode);
     setFormData({ username: '', email: '', password: '' });
+    setAdminFormData({ email: '', password: '' });
     setShowPassword(false);
+    setForgotPasswordMode(false);
+    setForgotPasswordSent(false);
+    setForgotPasswordEmail('');
   };
 
   return (
@@ -78,34 +116,51 @@ const AuthModal = ({ setShowAuthModal, setUser, Cookies }) => {
             <p className="modal-subtitle">Your sweet journey begins here</p>
           </div>
           <div className="auth-toggle">
-            <button onClick={() => setAuthMode('signIn')} className={`auth-toggle-button ${authMode === 'signIn' ? 'active' : 'inactive'}`}>Sign In</button>
-            <button onClick={() => setAuthMode('signUp')} className={`auth-toggle-button ${authMode === 'signUp' ? 'active' : 'inactive'}`}>Sign Up</button>
+            <button onClick={() => toggleAuthMode('signIn')} className={`auth-toggle-button ${authMode === 'signIn' ? 'active' : 'inactive'}`}>Sign In</button>
+            <button onClick={() => toggleAuthMode('signUp')} className={`auth-toggle-button ${authMode === 'signUp' ? 'active' : 'inactive'}`}>Sign Up</button>
+            <button onClick={() => toggleAuthMode('admin')} className={`auth-toggle-button ${authMode === 'admin' ? 'active' : 'inactive'}`}>Admin Login</button>
           </div>
           {forgotPasswordMode ? (
-            <ForgotPasswordForm
-              email={forgotPasswordEmail}
-              onChange={e => setForgotPasswordEmail(e.target.value)}
-              onSubmit={handleForgotPasswordSubmit}
-              onBack={() => { setForgotPasswordMode(false); setForgotPasswordSent(false); setForgotPasswordEmail(''); }}
-              sent={forgotPasswordSent}
-            />
+            <div className="form-card">
+              <ForgotPasswordForm
+                email={forgotPasswordEmail}
+                onChange={e => setForgotPasswordEmail(e.target.value)}
+                onSubmit={handleForgotPasswordSubmit}
+                onBack={() => { setForgotPasswordMode(false); setForgotPasswordSent(false); setForgotPasswordEmail(''); }}
+                sent={forgotPasswordSent}
+              />
+            </div>
           ) : authMode === 'signIn' ? (
-            <SignInForm
-              formData={formData}
-              onChange={handleInputChange}
-              onSubmit={handleAuthSubmit}
-              showPassword={showPassword}
-              setShowPassword={setShowPassword}
-              onForgotPassword={() => setForgotPasswordMode(true)}
-            />
+            <div className="form-card">
+              <SignInForm
+                formData={formData}
+                onChange={handleInputChange}
+                onSubmit={handleAuthSubmit}
+                showPassword={showPassword}
+                setShowPassword={setShowPassword}
+                onForgotPassword={() => setForgotPasswordMode(true)}
+              />
+            </div>
+          ) : authMode === 'signUp' ? (
+            <div className="form-card">
+              <SignUpForm
+                formData={formData}
+                onChange={handleInputChange}
+                onSubmit={handleAuthSubmit}
+                showPassword={showPassword}
+                setShowPassword={setShowPassword}
+              />
+            </div>
           ) : (
-            <SignUpForm
-              formData={formData}
-              onChange={handleInputChange}
-              onSubmit={handleAuthSubmit}
-              showPassword={showPassword}
-              setShowPassword={setShowPassword}
-            />
+            <div className="form-card">
+              <AdminLoginForm
+                formData={adminFormData}
+                onChange={handleAdminInputChange}
+                onSubmit={handleAdminLogin}
+                showPassword={showPassword}
+                setShowPassword={setShowPassword}
+              />
+            </div>
           )}
         </div>
       </div>

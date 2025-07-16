@@ -27,9 +27,8 @@ body {
   --color-card: #fff;
 }
 
-body, .main-container {
-  background: var(--color-bg);
-  color: var(--color-text);
+body, .main-container, .admin-dashboard-bg, .form-card, .modal, .admin-dashboard-card {
+  transition: background 0.5s cubic-bezier(0.4,0,0.2,1), color 0.5s cubic-bezier(0.4,0,0.2,1);
 }
 .header, .footer {
   background: var(--color-bg-secondary);
@@ -1599,4 +1598,281 @@ body, .main-container {
 .forgot-password-form button:hover {
   background: linear-gradient(90deg, #db2777, #7c3aed);
   transform: translateY(-2px) scale(1.04);
+}
+
+/* Admin Dashboard Styles */
+.admin-dashboard-bg {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #fdf2f8 0%, #c026d3 100%);
+  padding: 0 0 4rem 0;
+}
+.admin-dashboard-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 2rem;
+}
+.admin-dashboard-logo {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(236,72,153,0.10);
+  margin-bottom: 16px;
+}
+.admin-dashboard-title {
+  font-family: 'Times New Roman', serif;
+  color: #c026d3;
+  font-weight: 700;
+  font-size: 2.5rem;
+  margin-bottom: 0;
+}
+.admin-dashboard-subtitle {
+  color: #9333ea;
+  font-weight: 500;
+  margin-top: 8px;
+  margin-bottom: 24px;
+}
+.admin-dashboard-tabs {
+  margin: 1rem 0;
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+.admin-dashboard-tab {
+  padding: 0.7rem 1.5rem;
+  border: none;
+  border-radius: 2rem;
+  background: #fff;
+  color: #c026d3;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  outline: none;
+}
+.admin-dashboard-tab.active {
+  background: linear-gradient(90deg, #ec4899, #9333ea);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(236,72,153,0.10);
+}
+.admin-dashboard-card {
+  background: rgba(255,255,255,0.95);
+  border-radius: 1.5rem;
+  box-shadow: 0 8px 32px rgba(236,72,153,0.10);
+  padding: 2rem;
+  max-width: 700px;
+  margin: 2rem auto;
+}
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  background: #fff;
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(236,72,153,0.08);
+}
+.admin-table th, .admin-table td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+}
+.admin-table th {
+  background: linear-gradient(90deg, #ec4899 0%, #9333ea 100%);
+  color: #fff;
+  font-weight: 600;
+}
+.admin-table tr:nth-child(even) {
+  background: #fdf2f8;
+}
+.admin-table tr:nth-child(odd) {
+  background: #fff;
+}
+.form-input {
+  width: 100%;
+  padding: 0.7rem 1rem;
+  margin-bottom: 1rem;
+  border-radius: 0.7rem;
+  border: 1.5px solid #f3e8ff;
+  font-size: 1rem;
+  background: #fff;
+  transition: border-color 0.2s;
+  box-sizing: border-box;
+}
+.form-input:focus {
+  border-color: #c026d3;
+  outline: none;
+}
+.submit-button {
+  background: linear-gradient(90deg, #ec4899, #9333ea);
+  color: #fff;
+  border: none;
+  border-radius: 2rem;
+  padding: 0.7rem 1.5rem;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(236,72,153,0.10);
+  transition: background 0.2s;
+}
+.submit-button:hover {
+  background: linear-gradient(90deg, #9333ea, #ec4899);
+}
+
+.form-card {
+  background: rgba(253, 242, 248, 0.98);
+  border-radius: 1.5rem;
+  box-shadow: 0 8px 32px rgba(236,72,153,0.13);
+  padding: 2.5rem 2rem;
+  max-width: 400px;
+  margin: 2.5rem auto;
+  z-index: 2;
+  border: 1.5px solid #f3e8ff;
+  position: relative;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.3rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.form-label {
+  display: block;
+  color: #7c3aed;
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+  font-size: 1.08rem;
+  letter-spacing: 0.01em;
+}
+
+.form-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: #f3f4f6;
+  border-radius: 0.9rem;
+  border: 1.5px solid #e5e7eb;
+  padding: 0.35rem 1rem;
+  margin-bottom: 0.5rem;
+  transition: border-color 0.2s, box-shadow 0.2s, transform 0.18s;
+}
+
+.form-input-wrapper:focus-within {
+  border-color: #a78bfa;
+  box-shadow: 0 0 0 2px #a78bfa33;
+  transform: scale(1.025);
+}
+
+.form-icon,
+.form-icon.email,
+.form-icon.password {
+  background: #ede9fe;
+  color: #a78bfa;
+  border-radius: 50%;
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 0.75rem;
+  font-size: 1.15rem;
+}
+
+.form-input {
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 1.08rem;
+  flex: 1;
+  padding: 0.85rem 0;
+  color: #22223b;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
+.form-input:focus {
+  background: #fdf6fb;
+}
+
+.password-toggle {
+  background: none;
+  border: none;
+  color: #a78bfa;
+  margin-left: 0.5rem;
+  cursor: pointer;
+  font-size: 1.15rem;
+  display: flex;
+  align-items: center;
+  transition: color 0.2s, transform 0.18s;
+}
+
+.password-toggle:hover {
+  color: #7c3aed;
+  transform: scale(1.15);
+}
+
+.forgot-password {
+  text-align: center;
+  margin-top: 0.5rem;
+}
+
+.forgot-password-link {
+  color: #a78bfa;
+  background: none;
+  border: none;
+  font-size: 0.98rem;
+  font-weight: 500;
+  text-decoration: underline;
+  cursor: pointer;
+  transition: color 0.2s;
+  padding: 0.25rem 0.5rem;
+}
+
+.forgot-password-link:hover {
+  color: #7c3aed;
+  text-decoration: underline;
+}
+
+.submit-button {
+  width: 100%;
+  background: linear-gradient(90deg, #ec4899, #9333ea);
+  color: white;
+  padding: 0.85rem 1.1rem;
+  border: none;
+  border-radius: 0.9rem;
+  font-weight: 600;
+  font-size: 1.12rem;
+  cursor: pointer;
+  transition: all 0.3s, box-shadow 0.18s;
+  box-shadow: 0 4px 14px rgba(236,72,153,0.10);
+  letter-spacing: 0.01em;
+  margin-top: 0.5rem;
+  position: relative;
+  z-index: 1;
+}
+
+.submit-button:hover {
+  background: linear-gradient(90deg, #db2777, #7c3aed);
+  transform: scale(1.05);
+  box-shadow: 0 6px 18px rgba(236,72,153,0.18);
+}
+
+@media (max-width: 600px) {
+  .form-card {
+    padding: 1.2rem 0.5rem;
+    max-width: 98vw;
+  }
+  .form-label {
+    font-size: 1rem;
+  }
+  .submit-button {
+    font-size: 1rem;
+    padding: 0.7rem 0.7rem;
+  }
 }

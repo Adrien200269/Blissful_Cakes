@@ -1,0 +1,275 @@
+/* Admin Dashboard Styles */
+.admin-dashboard-bg {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #fdf2f8 0%, #c026d3 100%);
+  padding: 0 0 4rem 0;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Decorative Dots */
+.admin-decorative-dot {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+}
+.admin-dot-1 {
+  top: 3rem;
+  left: 2rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  background: #f9a8d4;
+  opacity: 0.5;
+  animation: pulse 2s infinite;
+}
+.admin-dot-2 {
+  top: 8rem;
+  right: 4rem;
+  width: 3rem;
+  height: 3rem;
+  background: #c084fc;
+  opacity: 0.4;
+  animation: bounce 1.5s infinite;
+}
+.admin-dot-3 {
+  bottom: 6rem;
+  left: 6rem;
+  width: 2rem;
+  height: 2rem;
+  background: #a5b4fc;
+  opacity: 0.3;
+  animation: pulse 2.5s infinite;
+}
+.admin-dot-4 {
+  bottom: 3rem;
+  right: 2rem;
+  width: 1.5rem;
+  height: 1.5rem;
+  background: #f472b6;
+  opacity: 0.5;
+  animation: bounce 1.2s infinite;
+}
+
+.admin-dashboard-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 2rem;
+  z-index: 1;
+  position: relative;
+}
+.admin-dashboard-logo {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(236,72,153,0.10);
+  margin-bottom: 16px;
+  background: #fff;
+  object-fit: cover;
+}
+.admin-dashboard-title {
+  font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+  color: #c026d3;
+  font-weight: 800;
+  font-size: 2.5rem;
+  margin-bottom: 0;
+  letter-spacing: 1px;
+  background: linear-gradient(90deg, #ec4899, #9333ea, #4338ca);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.admin-dashboard-subtitle {
+  color: #9333ea;
+  font-weight: 500;
+  margin-top: 8px;
+  margin-bottom: 24px;
+  font-size: 1.1rem;
+  letter-spacing: 0.5px;
+}
+.admin-dashboard-tabs {
+  margin: 1rem 0;
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  z-index: 1;
+}
+.admin-dashboard-tab {
+  padding: 0.7rem 1.5rem;
+  border: none;
+  border-radius: 2rem;
+  background: #fff;
+  color: #c026d3;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s, box-shadow 0.2s;
+  outline: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 0 1px 4px rgba(236,72,153,0.06);
+}
+.admin-dashboard-tab:hover {
+  background: #fdf2f8;
+  color: #9333ea;
+  box-shadow: 0 2px 8px rgba(236,72,153,0.12);
+  transform: translateY(-2px) scale(1.04);
+}
+.admin-dashboard-tab.active {
+  background: linear-gradient(90deg, #ec4899, #9333ea);
+  color: #fff;
+  box-shadow: 0 2px 12px rgba(236,72,153,0.18);
+  transform: scale(1.07);
+}
+.admin-dashboard-card {
+  background: rgba(255,255,255,0.97);
+  border-radius: 1.5rem;
+  box-shadow: 0 8px 32px rgba(236,72,153,0.13);
+  padding: 2.5rem 2rem;
+  max-width: 800px;
+  margin: 2.5rem auto;
+  z-index: 1;
+}
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1.5rem;
+  background: #fff;
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(236,72,153,0.10);
+  font-size: 1rem;
+}
+.admin-table th, .admin-table td {
+  padding: 0.85rem 1.2rem;
+  text-align: left;
+}
+.admin-table th {
+  background: linear-gradient(90deg, #ec4899 0%, #9333ea 100%);
+  color: #fff;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+.admin-table tr {
+  transition: background 0.18s;
+}
+.admin-table tr:hover {
+  background: #f9fafb;
+}
+.admin-table tr:nth-child(even) {
+  background: #fdf2f8;
+}
+.admin-table tr:nth-child(odd) {
+  background: #fff;
+}
+.form-input {
+  width: 100%;
+  padding: 0.8rem 1.1rem;
+  margin-bottom: 1.2rem;
+  border-radius: 0.7rem;
+  border: 1.5px solid #f3e8ff;
+  font-size: 1rem;
+  background: #fff;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  box-sizing: border-box;
+}
+.form-input:focus {
+  border-color: #c026d3;
+  outline: none;
+  box-shadow: 0 0 0 2px #f9a8d4;
+}
+.submit-button {
+  background: linear-gradient(90deg, #ec4899, #9333ea);
+  color: #fff;
+  border: none;
+  border-radius: 2rem;
+  padding: 0.8rem 1.7rem;
+  font-weight: 700;
+  font-size: 1.05rem;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(236,72,153,0.13);
+  transition: background 0.2s, transform 0.18s;
+}
+.submit-button:hover {
+  background: linear-gradient(90deg, #9333ea, #ec4899);
+  transform: scale(1.05);
+}
+
+/* Order Status Badges */
+.order-status-badge {
+  display: inline-block;
+  padding: 0.35em 1em;
+  border-radius: 1em;
+  font-size: 0.95em;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  background: #f3e8ff;
+  color: #9333ea;
+  box-shadow: 0 1px 4px rgba(236,72,153,0.08);
+  margin-right: 0.2em;
+  min-width: 80px;
+  text-align: center;
+}
+.badge-delivered {
+  background: #d1fae5;
+  color: #059669;
+}
+.badge-pending {
+  background: #fef3c7;
+  color: #d97706;
+}
+.badge-cancelled {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+/* Ellipsis for long notes */
+.order-note-ellipsis {
+  display: inline-block;
+  max-width: 160px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: bottom;
+  cursor: pointer;
+}
+
+/* Responsive scroll for table */
+.admin-table-scroll {
+  width: 100%;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+}
+
+@media (max-width: 700px) {
+  .admin-dashboard-card {
+    padding: 1.2rem 0.5rem;
+    max-width: 98vw;
+  }
+  .admin-dashboard-header {
+    padding-top: 1rem;
+  }
+  .admin-dashboard-title {
+    font-size: 1.5rem;
+  }
+  .admin-dashboard-logo {
+    width: 56px;
+    height: 56px;
+  }
+  .admin-dashboard-tabs {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .admin-table-scroll {
+    margin-left: -1rem;
+    margin-right: -1rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  .order-note-ellipsis {
+    max-width: 80px;
+    font-size: 0.92em;
+  }
+} 

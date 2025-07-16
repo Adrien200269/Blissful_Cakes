@@ -11,6 +11,7 @@ import LandingPage from './pages/LandingPage';
 import CartPanel from './pages/CartPanel';
 import AuthModal from './pages/AuthModal';
 import NotFound from './pages/NotFound';
+import AdminPage from './pages/AdminPage';
 
 const App = () => {
   // Global state only
@@ -236,6 +237,7 @@ const App = () => {
         <Routes>
           <Route path="/" element={<LandingPage favorites={favorites} toggleFavorite={toggleFavorite} handleAddToCart={handleAddToCart} user={user} />} />
           <Route path="/about" element={<AboutUs />} />
+          <Route path="/admin" element={<AdminPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
         {/* Footer */}
