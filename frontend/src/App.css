@@ -74,6 +74,13 @@ body, .main-container {
   animation: pulse 2s infinite;
 }
 
+.footer-section-title{
+  color: black;
+}
+
+.footer-brand-text{
+  color: #000;
+}
 .decorative-dot-2 {
   top: 10rem;
   right: 5rem;
