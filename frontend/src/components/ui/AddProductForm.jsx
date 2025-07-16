@@ -12,18 +12,21 @@ const AddProductForm = ({ onProductAdded }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
-
   const handleChange = e => {
     setForm({ ...form, [e.target.name]: e.target.value });
+    console.log(form);
   };
 
   const handleSubmit = async e => {
     e.preventDefault();
+    console.log(form);
+    
     setLoading(true);
     setError(null);
     setSuccess(null);
     try {
-      const res = await fetch('/api/products', {
+      console.log(form);
+      const res = await fetch('http://localhost:5000/api/products', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form)
@@ -33,6 +36,8 @@ const AddProductForm = ({ onProductAdded }) => {
       setForm({ name: '', price: '', description: '', image: '', rating: '', category: '' });
       if (onProductAdded) onProductAdded();
     } catch (err) {
+      alert(err)
+      console.log(err);
       setError('Could not add product.');
     } finally {
       setLoading(false);

@@ -15,6 +15,7 @@ const getAllProducts = async (req, res) => {
 const addProduct = async (req, res) => {
   try {
     const { name, price, description, image, rating, category } = req.body;
+    console.log(req.body);
     if (!name || !price || !category) {
       return res.status(400).json({ error: 'Name, price, and category are required' });
     }
@@ -28,9 +29,8 @@ const addProduct = async (req, res) => {
     });
     res.status(201).json(newProduct);
   } catch (error) {
-    console.error('Add product error:', error);
+    console.log('Add product error:', error);
     res.status(500).json({ error: 'Failed to add product' });
   }
 };
-
 module.exports = { getAllProducts, addProduct }; 

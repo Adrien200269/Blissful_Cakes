@@ -13,7 +13,7 @@ const LandingPage = ({ favorites, toggleFavorite, handleAddToCart, user, refresh
   const fetchProducts = useCallback(() => {
     setLoading(true);
     setError(null);
-    fetch('/api/products')
+    fetch('http://localhost:5000/api/products')
       .then(res => {
         if (!res.ok) throw new Error('Failed to fetch products');
         return res.json();
