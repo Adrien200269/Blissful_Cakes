@@ -35,22 +35,27 @@ const OrdersTable = () => (
         <tbody>
           {mockOrders.map(order => (
             <tr key={order.id}>
-              <td>{order.id}</td>
-              <td>{order.user}</td>
-              <td>{order.items}</td>
-              <td>{order.total}</td>
-              <td>
+              <td className="admin-table-cell">{order.id}</td>
+              <td className="admin-table-cell">{order.user}</td>
+              <td className="admin-table-cell">{order.items}</td>
+              <td className="admin-table-cell">{order.total}</td>
+              <td className="admin-table-cell">
                 <span className={`order-status-badge ${statusColors[order.status] || ''}`}>{order.status}</span>
               </td>
-              <td>{order.address}</td>
-              <td>{order.phone}</td>
-              <td>
+              <td className="admin-table-cell">{order.address}</td>
+              <td className="admin-table-cell">{order.phone}</td>
+              <td className="admin-table-cell">
                 <span className="order-note-ellipsis" title={order.note}>{order.note}</span>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
+      <style>{`
+        .admin-table-cell {
+          color: #111;
+        }
+      `}</style>
     </div>
   </div>
 );

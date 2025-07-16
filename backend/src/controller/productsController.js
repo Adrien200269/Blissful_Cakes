@@ -33,4 +33,44 @@ const addProduct = async (req, res) => {
     res.status(500).json({ error: 'Failed to add product' });
   }
 };
-module.exports = { getAllProducts, addProduct }; 
+
+// PUT /api/products/:id
+const updateProduct = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name, price, description, image, rating, category } = req.body;
+    const product = await Product.findByPk(id);
+    if (!product) {
+      return res.status(404).json({ error: 'Product not found' });
+    }
+    product.name = name ?? product.name;
+    product.price = price ?? product.price;
+    product.description = description ?? product.description;
+    product.image = image ?? product.image;
+    product.rating = rating ?? product.rating;
+    product.category = category ?? product.category;
+    await product.save();
+    res.json(product);
+  } catch (error) {
+    console.error('Update product error:', error);
+    res.status(500).json({ error: 'Failed to update product' });
+  }
+};
+
+// DELETE /api/products/:id
+const deleteProduct = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const product = await Product.findByPk(id);
+    if (!product) {
+      return res.status(404).json({ error: 'Product not found' });
+    }
+    await product.destroy();
+    res.json({ message: 'Product deleted' });
+  } catch (error) {
+    console.error('Delete product error:', error);
+    res.status(500).json({ error: 'Failed to delete product' });
+  }
+};
+
+module.exports = { getAllProducts, addProduct, updateProduct, deleteProduct }; 

@@ -20,14 +20,19 @@ const UsersTable = () => (
       <tbody>
         {mockUsers.map(user => (
           <tr key={user.id}>
-            <td>{user.id}</td>
-            <td>{user.name}</td>
-            <td>{user.email}</td>
-            <td>{user.role}</td>
+            <td className="admin-table-cell">{user.id}</td>
+            <td className="admin-table-cell">{user.name}</td>
+            <td className="admin-table-cell">{user.email}</td>
+            <td className="admin-table-cell">{user.role}</td>
           </tr>
         ))}
       </tbody>
     </table>
+    <style>{`
+      .admin-table-cell {
+        color: #111;
+      }
+    `}</style>
   </div>
 );
 

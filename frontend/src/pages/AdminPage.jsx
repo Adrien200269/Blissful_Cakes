@@ -2,12 +2,14 @@ import React, { useState } from 'react';
 import AddProductForm from '../components/ui/AddProductForm';
 import OrdersTable from '../components/ui/OrdersTable';
 import UsersTable from '../components/ui/UsersTable';
+import ProductsTable from '../components/ui/ProductsTable';
 import blissfulLogo from '../assets/blissful-logo.jpg';
 import { ShoppingBag, ClipboardList, Users, PlusCircle } from 'lucide-react';
 import './adminpage.css';
 
 const tabData = [
   { key: 'addProduct', label: 'Add Product', icon: <PlusCircle size={18} style={{ marginRight: 8 }} /> },
+  { key: 'products', label: 'Products', icon: <ShoppingBag size={18} style={{ marginRight: 8 }} /> },
   { key: 'orders', label: 'Orders', icon: <ClipboardList size={18} style={{ marginRight: 8 }} /> },
   { key: 'users', label: 'Users', icon: <Users size={18} style={{ marginRight: 8 }} /> },
 ];
@@ -76,6 +78,12 @@ const AdminPage = () => {
             <h2 style={{ margin: 0, color: '#c026d3' }}>Add Product</h2>
           </div>
         )}
+        {tab === 'products' && (
+          <div style={{ display: 'flex', alignItems: 'center', marginBottom: 24, gap: 8 }}>
+            <ShoppingBag color="#ec4899" size={22} />
+            <h2 style={{ margin: 0, color: '#ec4899' }}>Products</h2>
+          </div>
+        )}
         {tab === 'orders' && (
           <div style={{ display: 'flex', alignItems: 'center', marginBottom: 24, gap: 8 }}>
             <ClipboardList color="#9333ea" size={22} />
@@ -90,6 +98,7 @@ const AdminPage = () => {
         )}
         {/* Content */}
         {tab === 'addProduct' && <AddProductForm />}
+        {tab === 'products' && <ProductsTable />}
         {tab === 'orders' && <OrdersTable />}
         {tab === 'users' && <UsersTable />}
       </div>
