@@ -110,13 +110,27 @@
   justify-content: center;
 }
 
+@keyframes logo-fade {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(1.08);
+  }
+}
+
 .aboutus-logo img {
-  width: 200px;
-  height: 200px;
-  object-fit: contain;
-  border-radius: 50%;
-  background: #fdf2f8;
-  box-shadow: 0 2px 12px rgba(236,72,153,0.08);
+  max-width: 220px;
+  width: 100%;
+  border-radius: 16px;
+  border: 2px solid #b53471;
+  background: #fff;
+  box-shadow: 0 4px 16px rgba(181,52,113,0.08);
+  padding: 16px;
+  /* Fade animation */
+  animation: logo-fade 2.5s infinite ease-in-out;
 }
 
 @media (min-width: 768px) {
