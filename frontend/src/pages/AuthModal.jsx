@@ -15,6 +15,8 @@ const AuthModal = ({ setShowAuthModal, setUser, Cookies }) => {
   const [forgotPasswordMode, setForgotPasswordMode] = useState(false);
   const [forgotPasswordEmail, setForgotPasswordEmail] = useState('');
   const [forgotPasswordSent, setForgotPasswordSent] = useState(false);
+  const [authMessage, setAuthMessage] = useState(null);
+  const [authMessageType, setAuthMessageType] = useState(null); // 'success' or 'error'
 
   const handleInputChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -25,6 +27,8 @@ const AuthModal = ({ setShowAuthModal, setUser, Cookies }) => {
 
   const handleAuthSubmit = async (e) => {
     e.preventDefault();
+    setAuthMessage(null);
+    setAuthMessageType(null);
     try {
       const endpoint = authMode === 'signUp' ? '/api/auth/register' : '/api/auth/login';
       const payload = authMode === 'signUp'
@@ -37,50 +41,69 @@ const AuthModal = ({ setShowAuthModal, setUser, Cookies }) => {
       });
       const data = await res.json();
       if (!res.ok || !data.data || !data.data.token) {
-        alert(data.message || 'Authentication failed');
+        setAuthMessage(data.message || 'Authentication failed');
+        setAuthMessageType('error');
         return;
       }
       Cookies.set('auth_token', data.data.token, { expires: 7 });
       Cookies.set('user', JSON.stringify(data.data.user), { expires: 7 });
       setUser(data.data.user);
-      setShowAuthModal(false);
+      setAuthMessage(authMode === 'signUp' ? 'Registration successful! Welcome!' : 'Login successful!');
+      setAuthMessageType('success');
+      setTimeout(() => {
+        setShowAuthModal(false);
+        setAuthMessage(null);
+        setAuthMessageType(null);
+      }, 1200);
       setFormData({ username: '', email: '', password: '' });
     } catch (err) {
-      alert('An error occurred. Please try again.');
+      setAuthMessage('An error occurred. Please try again.');
+      setAuthMessageType('error');
     }
   };
 
   const handleAdminLogin = async (e) => {
     e.preventDefault();
+    setAuthMessage(null);
+    setAuthMessageType(null);
     try {
-      // For now, use the same endpoint as user login
-      const res = await fetch('/api/auth/login', {
+      const res = await fetch('http://localhost:5000/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(adminFormData)
       });
       const data = await res.json();
       if (!res.ok || !data.data || !data.data.token) {
-        alert(data.message || 'Admin authentication failed');
+        setAuthMessage(data.message || 'Admin authentication failed');
+        setAuthMessageType('error');
         return;
       }
-      // Optionally, check if user is admin (role check)
       if (data.data.user.role !== 'admin') {
-        alert('You are not authorized as admin.');
+        setAuthMessage('You are not authorized as admin.');
+        setAuthMessageType('error');
         return;
       }
       Cookies.set('auth_token', data.data.token, { expires: 7 });
       Cookies.set('user', JSON.stringify(data.data.user), { expires: 7 });
       setUser(data.data.user);
-      setShowAuthModal(false);
+      setAuthMessage('Admin login successful!');
+      setAuthMessageType('success');
+      setTimeout(() => {
+        setShowAuthModal(false);
+        setAuthMessage(null);
+        setAuthMessageType(null);
+      }, 1200);
       setAdminFormData({ email: '', password: '' });
     } catch (err) {
-      alert('An error occurred. Please try again.');
+      setAuthMessage('An error occurred. Please try again.');
+      setAuthMessageType('error');
     }
   };
 
   const handleForgotPasswordSubmit = async (e) => {
     e.preventDefault();
+    setAuthMessage(null);
+    setAuthMessageType(null);
     try {
       await fetch('/api/auth/forgot-password', {
         method: 'POST',
@@ -88,8 +111,12 @@ const AuthModal = ({ setShowAuthModal, setUser, Cookies }) => {
         body: JSON.stringify({ email: forgotPasswordEmail })
       });
       setForgotPasswordSent(true);
+      setAuthMessage('If your email exists, a reset link has been sent.');
+      setAuthMessageType('success');
     } catch (err) {
       setForgotPasswordSent(true);
+      setAuthMessage('An error occurred. Please try again.');
+      setAuthMessageType('error');
     }
   };
 
@@ -161,6 +188,18 @@ const AuthModal = ({ setShowAuthModal, setUser, Cookies }) => {
                 setShowPassword={setShowPassword}
               />
             </div>
+          )}
+          {authMessage && (
+            <div style={{
+              color: authMessageType === 'success' ? '#16a34a' : '#dc2626',
+              background: authMessageType === 'success' ? '#f0fdf4' : '#fef2f2',
+              border: `1.5px solid ${authMessageType === 'success' ? '#bbf7d0' : '#fecaca'}`,
+              borderRadius: 8,
+              padding: '0.7rem 1rem',
+              marginBottom: 12,
+              textAlign: 'center',
+              fontWeight: 500
+            }}>{authMessage}</div>
           )}
         </div>
       </div>

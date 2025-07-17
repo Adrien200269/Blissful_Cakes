@@ -4,6 +4,7 @@ import { Input } from '../components/ui/input';
 import { Button } from '../components/ui/button';
 import CartItem from '../components/ui/CartItem';
 import CartWarning from '../components/ui/CartWarning';
+import Cookies from 'js-cookie';
 
 const CartPanel = ({
   cartItems,
@@ -13,24 +14,53 @@ const CartPanel = ({
   handleChangeQty,
   handleRemoveFromCart,
   cartOpen,
-  setCartOpen
+  setCartOpen,
+  user
 }) => {
   const [showCheckoutDetails, setShowCheckoutDetails] = useState(false);
   const [checkoutForm, setCheckoutForm] = useState({ name: '', address: '', note: '' });
   const [orderSuccess, setOrderSuccess] = useState(false);
+  const [orderError, setOrderError] = useState(null);
 
   const cartCount = cartItems.reduce((sum, i) => sum + i.quantity, 0);
-  const cartTotal = cartItems.reduce((sum, i) => sum + (parseInt(i.price.replace(/\D/g, '')) * i.quantity), 0);
+  const cartTotal = cartItems.reduce((sum, i) => sum + (Number(i.price) * i.quantity), 0);
 
   const handleDetailsChange = (e) => {
     setCheckoutForm({ ...checkoutForm, [e.target.name]: e.target.value });
   };
-  const handleDetailsSubmit = (e) => {
+  const handleDetailsSubmit = async (e) => {
     e.preventDefault();
-    setShowCheckoutDetails(false);
-    setOrderSuccess(true);
-    setCheckoutForm({ name: '', address: '', note: '' });
-    setCartItems([]); // Clear cart after order
+    setOrderError(null);
+    // Prepare order data
+    const orderData = {
+      products: cartItems.map(item => ({ productId: item.id, quantity: item.quantity })),
+      address: checkoutForm.address,
+      phone: user?.phone || '',
+      note: checkoutForm.note
+    };
+    try {
+      const token = Cookies.get('auth_token');
+      console.log('JWT token:', token);
+      const res = await fetch('http://localhost:5000/api/orders', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(orderData)
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setShowCheckoutDetails(false);
+        setOrderSuccess(true);
+        setCheckoutForm({ name: '', address: '', note: '' });
+        setCartItems([]); // Clear cart after order
+      } else {
+        setOrderError(data.message || 'Order failed.');
+      }
+    } catch (err) {
+      setOrderError('Order failed. Please try again.');
+    }
   };
   const handleCheckout = () => {
     if (cartItems.length === 0) {
@@ -68,6 +98,7 @@ const CartPanel = ({
               rows={3}
               style={{ resize: 'vertical', marginBottom: '0.5rem', borderRadius: '0.5rem', border: '1.5px solid #f3e8ff', padding: '0.7rem 1rem', fontSize: '1rem', background: '#fff', transition: 'border-color 0.2s', width: '100%', boxSizing: 'border-box' }}
             />
+            {orderError && <div style={{ color: 'red', marginBottom: 8 }}>{orderError}</div>}
             <div style={{ marginTop: 16, display: 'flex', gap: 8 }}>
               <Button type="submit">Order Now</Button>
               <Button type="button" onClick={() => setShowCheckoutDetails(false)}>Cancel</Button>

@@ -95,7 +95,7 @@ const App = () => {
   };
 
   // Cart total
-  const cartTotal = cartItems.reduce((sum, i) => sum + (parseInt(i.price.replace(/\D/g, '')) * i.quantity), 0);
+  const cartTotal = cartItems.reduce((sum, i) => sum + (i.price * i.quantity), 0);
   const cartCount = cartItems.reduce((sum, i) => sum + i.quantity, 0);
 
   const handleCheckout = () => {

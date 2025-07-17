@@ -6,7 +6,7 @@ const CartItem = ({ item, onChangeQty, onRemove }) => (
     <img src={item.image} alt={item.name} className="cart-item-img" />
     <div className="cart-item-info">
       <div className="cart-item-title">{item.name}</div>
-      <div className="cart-item-price">Rs {parseInt(item.price.replace(/\D/g, '')) * item.quantity}</div>
+      <div className="cart-item-price">Rs {Number(item.price).toLocaleString()}</div>
       <div className="cart-item-controls">
         <button onClick={() => onChangeQty(item.id, -1)} className="cart-qty-btn">-</button>
         <span className="cart-qty">{item.quantity}</span>

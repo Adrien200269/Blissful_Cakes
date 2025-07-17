@@ -1,13 +1,5 @@
-const { Model } = require('sequelize');
-
 module.exports = (sequelize, DataTypes) => {
-  class OrderItem extends Model {
-    static associate(models) {
-      // No direct associations needed as this is a junction table
-    }
-  }
-  
-  OrderItem.init({
+  const OrderItem = sequelize.define('OrderItem', {
     orderId: {
       type: DataTypes.INTEGER,
       primaryKey: true
@@ -26,10 +18,11 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     }
   }, {
-    sequelize,
-    modelName: 'OrderItem',
-    timestamps: true
+    timestamps: true,
+    tableName: 'order_items'
   });
-
+  OrderItem.associate = (models) => {
+    OrderItem.belongsTo(models.Product, { foreignKey: 'productId', as: 'Product' });
+  };
   return OrderItem;
 };

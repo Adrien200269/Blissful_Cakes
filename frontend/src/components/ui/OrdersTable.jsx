@@ -1,63 +1,152 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { ClipboardList } from 'lucide-react';
-
-const mockOrders = [
-  { id: 1, user: 'john@example.com', items: 'Chocolate Cake x1', total: 'Rs 800', status: 'Delivered', address: 'Pokhara', phone: '9800000001', note: 'No nuts' },
-  { id: 2, user: 'jane@example.com', items: 'Cupcake x2', total: 'Rs 200', status: 'Pending', address: 'Kathmandu', phone: '9800000002', note: 'Birthday message: Happy Bday!' },
-];
+import Cookies from 'js-cookie';
 
 const statusColors = {
-  Delivered: 'badge-delivered',
-  Pending: 'badge-pending',
-  Cancelled: 'badge-cancelled',
+  completed: 'badge-delivered',
+  pending: 'badge-pending',
+  cancelled: 'badge-cancelled',
+  processing: 'badge-processing',
 };
 
-const OrdersTable = () => (
-  <div>
-    <div style={{ display: 'flex', alignItems: 'center', marginBottom: 24, gap: 8 }}>
-      <ClipboardList color="#9333ea" size={22} />
-      <h2 style={{ margin: 0, color: '#9333ea', fontWeight: 700, fontSize: 22 }}>Orders</h2>
-    </div>
-    <div className="admin-table-scroll">
-      <table className="admin-table">
-        <thead>
-          <tr>
-            <th>Order ID</th>
-            <th>User</th>
-            <th>Items</th>
-            <th>Total</th>
-            <th>Status</th>
-            <th>Address</th>
-            <th>Phone</th>
-            <th>Note</th>
-          </tr>
-        </thead>
-        <tbody>
-          {mockOrders.map(order => (
-            <tr key={order.id}>
-              <td className="admin-table-cell">{order.id}</td>
-              <td className="admin-table-cell">{order.user}</td>
-              <td className="admin-table-cell">{order.items}</td>
-              <td className="admin-table-cell">{order.total}</td>
-              <td className="admin-table-cell">
-                <span className={`order-status-badge ${statusColors[order.status] || ''}`}>{order.status}</span>
-              </td>
-              <td className="admin-table-cell">{order.address}</td>
-              <td className="admin-table-cell">{order.phone}</td>
-              <td className="admin-table-cell">
-                <span className="order-note-ellipsis" title={order.note}>{order.note}</span>
-              </td>
+const OrdersTable = () => {
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [statusMessage, setStatusMessage] = useState(null);
+  const [statusMessageType, setStatusMessageType] = useState(null); // 'success' or 'error'
+
+  const fetchOrders = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const token = Cookies.get('auth_token');
+      const res = await fetch('/api/orders', {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setOrders(data.orders);
+      } else {
+        setError(data.message || 'Failed to fetch orders.');
+      }
+    } catch (err) {
+      setError('Failed to fetch orders.');
+    }
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    fetchOrders();
+  }, []);
+
+  const handleStatusChange = async (orderId, newStatus) => {
+    setStatusMessage(null);
+    setStatusMessageType(null);
+    try {
+      const token = Cookies.get('auth_token');
+      const res = await fetch(`/api/orders/${orderId}/status`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ status: newStatus })
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setStatusMessage('Order status updated!');
+        setStatusMessageType('success');
+        fetchOrders();
+      } else {
+        setStatusMessage(data.message || 'Failed to update status.');
+        setStatusMessageType('error');
+      }
+    } catch (err) {
+      setStatusMessage('Failed to update status.');
+      setStatusMessageType('error');
+    }
+  };
+
+  return (
+    <div>
+      <div style={{ display: 'flex', alignItems: 'center', marginBottom: 24, gap: 8 }}>
+        <ClipboardList color="#9333ea" size={22} />
+        <h2 style={{ margin: 0, color: '#9333ea', fontWeight: 700, fontSize: 22 }}>Orders</h2>
+      </div>
+      {statusMessage && (
+        <div style={{
+          color: statusMessageType === 'success' ? '#16a34a' : '#dc2626',
+          background: statusMessageType === 'success' ? '#f0fdf4' : '#fef2f2',
+          border: `1.5px solid ${statusMessageType === 'success' ? '#bbf7d0' : '#fecaca'}`,
+          borderRadius: 8,
+          padding: '0.7rem 1rem',
+          marginBottom: 12,
+          textAlign: 'center',
+          fontWeight: 500
+        }}>{statusMessage}</div>
+      )}
+      <div className="admin-table-scroll">
+        {loading ? <div>Loading orders...</div> : error ? <div style={{ color: 'red' }}>{error}</div> : (
+        <table className="admin-table">
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>User</th>
+              <th>Items</th>
+              <th>Total</th>
+              <th>Status</th>
+              <th>Address</th>
+              <th>Phone</th>
+              <th>Note</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
-      <style>{`
-        .admin-table-cell {
-          color: #111;
-        }
-      `}</style>
+          </thead>
+          <tbody>
+            {orders.map(order => (
+              <tr key={order.id}>
+                <td className="admin-table-cell">{order.id}</td>
+                <td className="admin-table-cell">{order.user?.email || order.userId}</td>
+                <td className="admin-table-cell">
+                  {order.products && order.products.length > 0 ? order.products.map(item => `${item.name} x${item.OrderItem.quantity}`).join(', ') : ''}
+                </td>
+                <td className="admin-table-cell">Rs {order.totalAmount}</td>
+                <td className="admin-table-cell">
+                  <select
+                    value={order.status}
+                    onChange={e => handleStatusChange(order.id, e.target.value)}
+                    style={{
+                      borderRadius: 6,
+                      padding: '0.2rem 0.5rem',
+                      border: '1.5px solid #e9d5ff',
+                      background: '#faf5ff',
+                      color: '#9333ea',
+                      fontWeight: 600
+                    }}
+                  >
+                    <option value="pending">pending</option>
+                    <option value="processing">processing</option>
+                    <option value="completed">completed</option>
+                    <option value="cancelled">cancelled</option>
+                  </select>
+                </td>
+                <td className="admin-table-cell">{order.address}</td>
+                <td className="admin-table-cell">{order.phone}</td>
+                <td className="admin-table-cell">
+                  <span className="order-note-ellipsis" title={order.note}>{order.note}</span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        )}
+        <style>{`
+          .admin-table-cell {
+            color: #111;
+          }
+        `}</style>
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 export default OrdersTable; 

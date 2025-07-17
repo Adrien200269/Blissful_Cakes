@@ -1,16 +1,5 @@
-const { Model } = require('sequelize');
-
 module.exports = (sequelize, DataTypes) => {
-  class Category extends Model {
-    static associate(models) {
-      Category.hasMany(models.Product, {
-        foreignKey: 'categoryId',
-        as: 'products'
-      });
-    }
-  }
-  
-  Category.init({
+  const Category = sequelize.define('Category', {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
@@ -19,13 +8,10 @@ module.exports = (sequelize, DataTypes) => {
     name: {
       type: DataTypes.STRING,
       allowNull: false
-    },
-    description: DataTypes.TEXT
+    }
   }, {
-    sequelize,
-    modelName: 'Category',
-    timestamps: true
+    timestamps: true,
+    tableName: 'categories'
   });
-
   return Category;
 };
