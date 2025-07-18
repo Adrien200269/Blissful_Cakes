@@ -2,8 +2,9 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const dotenv = require('dotenv');
 const cors = require('cors');
-const { Sequelize } = require('sequelize');
-const {product} = require('../models/product.js'); // Ensure this path is correct
+const {sequelize, connectDB} = require('./database/index.js');
+const {product} = require('../models/product.js'); 
+const {User} = require('../src/models/user/User.js');
 
 // Load environment variables
 dotenv.config();
@@ -38,23 +39,13 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: 'Something went wrong!' });
 });
 
-const sequelize = new Sequelize('blissful_cakes', 'postgres', 'Poz@9841271385', {
-  host: '127.0.0.1',
-  dialect: 'postgres'
-});
-
-sequelize.authenticate()
-  .then(() => {
-    console.log('Connection has been established successfully.');
-    return sequelize.sync(); // <-- Add this line
-  })
-  .then(() => {
-    console.log('All models were synchronized successfully.');
-  })
-  .catch(err => {
-    console.error('Unable to connect to the database:', err);
-  });
+// const sequelize = new Sequelize('blissful_cakes', 'postgres', 'Poz@9841271385', {
+//   host: '127.0.0.1',
+//   dialect: 'postgres'
+// });
+connectDB()
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 }); 
+

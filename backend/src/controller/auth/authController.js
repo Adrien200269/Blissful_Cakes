@@ -4,12 +4,12 @@ const { User } = require('../../models');
 
 const register = async (req, res) => {
   try {
-    const { username, email, password, firstName, lastName } = req.body;
+    const { username, email, password} = req.body;
 
     // Check if user already exists
     const existingUser = await User.findOne({
       where: {
-        [require('sequelize').Op.or]: [{ email }, { username }]
+        email
       }
     });
 
@@ -29,8 +29,6 @@ const register = async (req, res) => {
       username,
       email,
       password: hashedPassword,
-      firstName,
-      lastName
     });
 
     // Generate JWT token

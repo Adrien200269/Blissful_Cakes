@@ -20,7 +20,7 @@ const Product = sequelize.define('Product', {
     allowNull: true
   },
   image: {
-    type: DataTypes.STRING,
+    type: DataTypes.STRING(1024),
     allowNull: true
   },
   rating: {

@@ -30,7 +30,7 @@ const AuthModal = ({ setShowAuthModal, setUser, Cookies }) => {
     setAuthMessage(null);
     setAuthMessageType(null);
     try {
-      const endpoint = authMode === 'signUp' ? '/api/auth/register' : '/api/auth/login';
+      const endpoint = authMode === 'signUp' ? 'http://localhost:5000/api/auth/register' : 'http://localhost:5000/api/auth/login';
       const payload = authMode === 'signUp'
         ? { username: formData.username, email: formData.email, password: formData.password }
         : { email: formData.email, password: formData.password };

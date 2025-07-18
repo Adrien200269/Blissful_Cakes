@@ -1,8 +1,8 @@
 import React from 'react';
 import { Eye, EyeOff } from 'lucide-react';
 
-const SignInForm = ({ formData, onChange, onSubmit, showPassword, setShowPassword, onForgotPassword }) => (
-  <form onSubmit={onSubmit} className="form">
+const SignInForm = ({ formData, onChange, onSubmit, showPassword, setShowPassword, onForgotPassword }) => {
+  return <form onSubmit={onSubmit} className="form">
     <div className="form-group">
       <label className="form-label">Email</label>
       <div className="form-input-wrapper">
@@ -49,6 +49,6 @@ const SignInForm = ({ formData, onChange, onSubmit, showPassword, setShowPasswor
       <span>✨</span>Sign In
     </button>
   </form>
-);
+}
 
 export default SignInForm; 
