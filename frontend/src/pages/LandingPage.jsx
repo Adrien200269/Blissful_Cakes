@@ -50,13 +50,6 @@ const LandingPage = ({ favorites, toggleFavorite, handleAddToCart, user, refresh
 
   return (
     <>
-      {/* Decorative Elements */}
-      <div className="decorative-elements">
-        <div className="decorative-dot decorative-dot-1"></div>
-        <div className="decorative-dot decorative-dot-2"></div>
-        <div className="decorative-dot decorative-dot-3"></div>
-        <div className="decorative-dot decorative-dot-4"></div>
-      </div>
       {/* Hero Section */}
       <section className="hero">
         <div className="hero-container">
