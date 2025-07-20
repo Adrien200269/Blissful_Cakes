@@ -6,6 +6,7 @@ import SignInForm from '../components/ui/SignInForm';
 import SignUpForm from '../components/ui/SignUpForm';
 import ForgotPasswordForm from '../components/ui/ForgotPasswordForm';
 import AdminLoginForm from '../components/ui/AdminLoginForm';
+import { useNavigate } from 'react-router-dom';
 
 const AuthModal = ({ setShowAuthModal, setUser, Cookies }) => {
   const [authMode, setAuthMode] = useState('signIn'); // 'signIn', 'signUp', 'admin'
@@ -17,6 +18,7 @@ const AuthModal = ({ setShowAuthModal, setUser, Cookies }) => {
   const [forgotPasswordSent, setForgotPasswordSent] = useState(false);
   const [authMessage, setAuthMessage] = useState(null);
   const [authMessageType, setAuthMessageType] = useState(null); // 'success' or 'error'
+  const navigate = useNavigate();
 
   const handleInputChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -92,6 +94,7 @@ const AuthModal = ({ setShowAuthModal, setUser, Cookies }) => {
         setShowAuthModal(false);
         setAuthMessage(null);
         setAuthMessageType(null);
+        navigate('/admin');
       }, 1200);
       setAdminFormData({ email: '', password: '' });
     } catch (err) {

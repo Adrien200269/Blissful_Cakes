@@ -31,6 +31,29 @@ const connectDB = async () => {
     // Sync all models
     await sequelize.sync({ alter: true });
     console.log('Database synchronized.');
+
+    // Create default admin user if not exists
+    const User = require('../models/user/User');
+    const bcrypt = require('bcryptjs');
+    const adminUsername = 'admin';
+    const adminEmail = 'admin@blissfulcakes.com';
+    const adminPassword = 'admin123';
+    const adminRole = 'admin';
+
+    const existingAdmin = await User.findOne({ where: { username: adminUsername, role: adminRole } });
+    if (!existingAdmin) {
+      const hashedPassword = await bcrypt.hash(adminPassword, 10);
+      await User.create({
+        username: adminUsername,
+        email: adminEmail,
+        password: hashedPassword,
+        role: adminRole,
+        isActive: true
+      });
+      console.log('Default admin user created.');
+    } else {
+      console.log('Default admin user already exists.');
+    }
   } catch (error) {
     console.error('Unable to connect to the database:', error);
   }
