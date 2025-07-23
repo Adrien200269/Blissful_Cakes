@@ -1,9 +1,11 @@
-const db = require('../../models');
+const db = require('../models');
 const { Order, OrderItem, User, Product } = db;
 
 // Create a new order
 const createOrder = async (req, res) => {
   try {
+    console.log(req.body);
+    
     const { products, address, phone, note } = req.body;
     const userId = req.user.userId;
 

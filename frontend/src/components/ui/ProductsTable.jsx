@@ -49,9 +49,16 @@ const ProductsTable = () => {
     e.preventDefault();
     setEditLoading(true);
     try {
+      let adminToken = '';
+      if (typeof window !== 'undefined') {
+        adminToken = localStorage.getItem('admin_token') || (window.Cookies && window.Cookies.get && window.Cookies.get('auth_token')) || '';
+      }
       const res = await fetch(`http://localhost:5000/api/products/${editProduct.id}` , {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${adminToken}`
+        },
         body: JSON.stringify(editForm)
       });
       if (!res.ok) throw new Error('Failed to update product');
@@ -74,16 +81,26 @@ const ProductsTable = () => {
   const handleDelete = async () => {
     setDeleteLoading(true);
     try {
+      let adminToken = '';
+      if (typeof window !== 'undefined') {
+        adminToken = localStorage.getItem('admin_token') || (window.Cookies && window.Cookies.get && window.Cookies.get('auth_token')) || '';
+      }
       const res = await fetch(`http://localhost:5000/api/products/${deleteId}`, {
-        method: 'DELETE'
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${adminToken}`
+        },
       });
       if (!res.ok) throw new Error('Failed to delete product');
       setDeleteId(null);
       fetchProducts();
     } catch (err) {
+      console.log(err);
       alert('Could not delete product.');
     } finally {
       setDeleteLoading(false);
+      setDeleteId(null);
     }
   };
 

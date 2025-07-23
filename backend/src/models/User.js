@@ -1,20 +1,26 @@
-const { Model } = require('sequelize');
+const { DataTypes } = require('sequelize');
+const sequelizeInstance = require('../database');
 
-module.exports = (sequelize, DataTypes) => {
+
+module.exports = (sequelize) => {
   const User = sequelize.define('User', {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true
     },
-    name: {
+    username: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      unique: true
     },
     email: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: true
+      unique: true,
+      validate: {
+        isEmail: true
+      }
     },
     password: {
       type: DataTypes.STRING,
@@ -23,13 +29,16 @@ module.exports = (sequelize, DataTypes) => {
     role: {
       type: DataTypes.ENUM('user', 'admin'),
       defaultValue: 'user'
+    },
+    isActive: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true
     }
   }, {
-    sequelize,
-    modelName: 'User',
     timestamps: true,
-    tableName: 'users'
+    tableName: 'users',
+    modelName: 'User',
   });
 
   return User;
-};
+}; 

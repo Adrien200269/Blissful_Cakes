@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const AddProductForm = ({ onProductAdded }) => {
+const AddProductForm = () => {
   const [form, setForm] = useState({
     name: '',
     price: '',
@@ -25,16 +25,24 @@ const AddProductForm = ({ onProductAdded }) => {
     setError(null);
     setSuccess(null);
     try {
-      console.log(form);
+      // Get admin token from cookies or localStorage
+      let adminToken = '';
+      if (typeof window !== 'undefined') {
+        adminToken = localStorage.getItem('admin_token') || (window.Cookies && window.Cookies.get && window.Cookies.get('auth_token')) || '';
+      }
+      console.log(adminToken);
+      
       const res = await fetch('http://localhost:5000/api/products', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${adminToken}`
+        },
         body: JSON.stringify(form)
       });
       if (!res.ok) throw new Error('Failed to add product');
       setSuccess('Product added!');
       setForm({ name: '', price: '', description: '', image: '', rating: '', category: '' });
-      if (onProductAdded) onProductAdded();
     } catch (err) {
       alert(err)
       console.log(err);

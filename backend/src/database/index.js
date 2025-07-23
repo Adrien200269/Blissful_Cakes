@@ -1,62 +1,23 @@
+require('dotenv').config();
 const { Sequelize } = require('sequelize');
-const dotenv = require('dotenv');
 
-dotenv.config();
+const dbName = process.env.DB_NAME || 'blissful_cakes';
+const dbUser = process.env.DB_USERNAME || 'postgres';
+const dbPass = process.env.DB_PASSWORD || 'Poz@9841271385';
+const dbHost = process.env.DB_HOST || '127.0.0.1';
+const dbDialect = process.env.DB_DIALECT || 'postgres';
 
-// const sequelize = new Sequelize(
-//   process.env.DB_NAME || 'blissful_cakes',
-//   process.env.DB_USER || 'postgres',
-//   process.env.DB_PASSWORD || 'Poz@9841271385',
-//   {
-//     host: process.env.DB_HOST || 'localhost',
-//     dialect: 'postgres',
-//     logging: false,
-//     pool: {
-//       max: 5,
-//       min: 0,
-//       acquire: 30000,
-//       idle: 10000
-//     }
-//   }
-// );
-const sequelize = new Sequelize('blissful_cakes', 'postgres', 'Poz@9841271385', {
-  host: '127.0.0.1',
-  dialect: 'postgres'
+const sequelize = new Sequelize(dbName, dbUser, dbPass, {
+  host: dbHost,
+  dialect: dbDialect,
 });
 
-const connectDB = async () => {
-  try {
-    await sequelize.authenticate();
+sequelize.authenticate()
+  .then(() => {
     console.log('Database connected successfully.');
-    // Sync all models
-    await sequelize.sync({ alter: true });
-    console.log('Database synchronized.');
-
-    // Create default admin user if not exists
-    const User = require('../models/user/User');
-    const bcrypt = require('bcryptjs');
-    const adminUsername = 'admin';
-    const adminEmail = 'admin@blissfulcakes.com';
-    const adminPassword = 'admin123';
-    const adminRole = 'admin';
-
-    const existingAdmin = await User.findOne({ where: { username: adminUsername, role: adminRole } });
-    if (!existingAdmin) {
-      const hashedPassword = await bcrypt.hash(adminPassword, 10);
-      await User.create({
-        username: adminUsername,
-        email: adminEmail,
-        password: hashedPassword,
-        role: adminRole,
-        isActive: true
-      });
-      console.log('Default admin user created.');
-    } else {
-      console.log('Default admin user already exists.');
-    }
-  } catch (error) {
+  })
+  .catch((error) => {
     console.error('Unable to connect to the database:', error);
-  }
-};
+  });
 
-module.exports = { sequelize, connectDB }; 
+module.exports = sequelize;

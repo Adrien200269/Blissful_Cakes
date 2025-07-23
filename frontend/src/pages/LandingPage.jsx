@@ -56,6 +56,19 @@ const LandingPage = ({ favorites, toggleFavorite, handleAddToCart, user, refresh
           <h1 className="hero-title" style={{fontFamily: 'Times New Roman, serif'}}>
             Welcome to Blissful Cakes
           </h1>
+          {/* Show username/email after login */}
+          {user && (
+            <div style={{
+              textAlign: 'center',
+              fontSize: '1.3rem',
+              fontWeight: 600,
+              color: '#9333ea',
+              margin: '0.5rem 0 0.5rem 0',
+              letterSpacing: '0.5px',
+            }}>
+              {user.username || user.email}
+            </div>
+          )}
           <div className="hero-divider"></div>
           <p className="hero-subtitle" style={{fontFamily: 'Times New Roman, serif'}}>
             Your premier destination for delicious and beautifully crafted cakes

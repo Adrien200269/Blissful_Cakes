@@ -28,6 +28,8 @@ const AuthModal = ({ setShowAuthModal, setUser, Cookies }) => {
   };
 
   const handleAuthSubmit = async (e) => {
+    console.log(formData);
+    
     e.preventDefault();
     setAuthMessage(null);
     setAuthMessageType(null);
@@ -47,10 +49,21 @@ const AuthModal = ({ setShowAuthModal, setUser, Cookies }) => {
         setAuthMessageType('error');
         return;
       }
+      // Prevent admin login from user form
+      if (data.data.user.role === 'admin') {
+        setAuthMessage('Admins must use the Admin Login tab.');
+        setAuthMessageType('error');
+        return;
+      }
       Cookies.set('auth_token', data.data.token, { expires: 7 });
       Cookies.set('user', JSON.stringify(data.data.user), { expires: 7 });
       setUser(data.data.user);
-      setAuthMessage(authMode === 'signUp' ? 'Registration successful! Welcome!' : 'Login successful!');
+      // Show welcome message for user login only
+      if (authMode === 'signIn') {
+        setAuthMessage(`Hello ${data.data.user.username || data.data.user.email} welcome to Blissful Cakes`);
+      } else {
+        setAuthMessage(authMode === 'signUp' ? 'Registration successful! Welcome!' : 'Login successful!');
+      }
       setAuthMessageType('success');
       setTimeout(() => {
         setShowAuthModal(false);
@@ -68,6 +81,7 @@ const AuthModal = ({ setShowAuthModal, setUser, Cookies }) => {
     e.preventDefault();
     setAuthMessage(null);
     setAuthMessageType(null);
+    // Fallback to API login for other credentials
     try {
       const res = await fetch('http://localhost:5000/api/auth/login', {
         method: 'POST',
@@ -87,6 +101,8 @@ const AuthModal = ({ setShowAuthModal, setUser, Cookies }) => {
       }
       Cookies.set('auth_token', data.data.token, { expires: 7 });
       Cookies.set('user', JSON.stringify(data.data.user), { expires: 7 });
+      localStorage.setItem('admin_token', data.data.token);
+      localStorage.setItem('admin_user', JSON.stringify(data.data.user));
       setUser(data.data.user);
       setAuthMessage('Admin login successful!');
       setAuthMessageType('success');
@@ -210,4 +226,4 @@ const AuthModal = ({ setShowAuthModal, setUser, Cookies }) => {
   );
 };
 
-export default AuthModal; 
+export default AuthModal;

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Search, ShoppingCart, User, Star, Heart, Clock, Award, Eye, EyeOff, X, Trash2, Sun, Moon } from 'lucide-react';
 import './App.css'
 import blissfulLogo from './assets/blissful-logo.jpg';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link, Navigate, useLocation } from 'react-router-dom';
 import AboutUs from './AboutUs';
 import { Input } from './components/ui/input';
 import { Button } from './components/ui/button';
@@ -12,6 +12,16 @@ import CartPanel from './pages/CartPanel';
 import AuthModal from './pages/AuthModal';
 import NotFound from './pages/NotFound';
 import AdminPage from './pages/AdminPage';
+
+// ProtectedRoute for admin dashboard
+function ProtectedAdminRoute({ user, children }) {
+  const location = useLocation();
+  if (!user || user.role !== 'admin') {
+    // Not logged in as admin, redirect to home or admin login modal
+    return <Navigate to="/" state={{ from: location }} replace />;
+  }
+  return children;
+}
 
 const App = () => {
   // Global state only
@@ -235,9 +245,14 @@ const App = () => {
         </header>
         {/* Page Content */}
         <Routes>
-          <Route path="/" element={<LandingPage favorites={favorites} toggleFavorite={toggleFavorite} handleAddToCart={handleAddToCart} user={user} />} />
+          {/* If admin is logged in, redirect from landing page to /admin */}
+          <Route path="/" element={user && user.role === 'admin' ? <Navigate to="/admin" replace /> : <LandingPage favorites={favorites} toggleFavorite={toggleFavorite} handleAddToCart={handleAddToCart} user={user} />} />
           <Route path="/about" element={<AboutUs />} />
-          <Route path="/admin" element={<AdminPage />} />
+          <Route path="/admin" element={
+            <ProtectedAdminRoute user={user}>
+              <AdminPage />
+            </ProtectedAdminRoute>
+          } />
           <Route path="*" element={<NotFound />} />
         </Routes>
         {/* Footer */}

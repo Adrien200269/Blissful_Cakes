@@ -18,7 +18,7 @@ const CartPanel = ({
   user
 }) => {
   const [showCheckoutDetails, setShowCheckoutDetails] = useState(false);
-  const [checkoutForm, setCheckoutForm] = useState({ name: '', address: '', note: '' });
+  const [checkoutForm, setCheckoutForm] = useState({ name: '', address: '', phone: '', note: '' });
   const [orderSuccess, setOrderSuccess] = useState(false);
   const [orderError, setOrderError] = useState(null);
 
@@ -31,15 +31,25 @@ const CartPanel = ({
   const handleDetailsSubmit = async (e) => {
     e.preventDefault();
     setOrderError(null);
+    // Validate phone
+    if (!checkoutForm.phone || checkoutForm.phone.length < 10) {
+      setOrderError('A valid phone number is required.');
+      return;
+    }
     // Prepare order data
     const orderData = {
       products: cartItems.map(item => ({ productId: item.id, quantity: item.quantity })),
       address: checkoutForm.address,
-      phone: user?.phone || '',
+      phone: checkoutForm.phone,
       note: checkoutForm.note
     };
+    console.log('Order payload:', orderData);
     try {
-      const token = Cookies.get('auth_token');
+      // Get token from localStorage or cookies
+      let token = '';
+      if (typeof window !== 'undefined') {
+        token = localStorage.getItem('auth_token') || (window.Cookies && window.Cookies.get && window.Cookies.get('auth_token')) || Cookies.get && Cookies.get('auth_token') || '';
+      }
       console.log('JWT token:', token);
       const res = await fetch('http://localhost:5000/api/orders', {
         method: 'POST',
@@ -53,7 +63,7 @@ const CartPanel = ({
       if (res.ok && data.success) {
         setShowCheckoutDetails(false);
         setOrderSuccess(true);
-        setCheckoutForm({ name: '', address: '', note: '' });
+        setCheckoutForm({ name: '', address: '', phone: '', note: '' });
         setCartItems([]); // Clear cart after order
       } else {
         setOrderError(data.message || 'Order failed.');
@@ -72,7 +82,7 @@ const CartPanel = ({
 
   return cartOpen ? (
     <div className="cart-overlay" onClick={() => { setCartOpen(false); setOrderSuccess(false); }}>
-      <div className="cart-panel" onClick={e => e.stopPropagation()}>
+      <div className="cart-panel" onClick={e => e.stopPropagation()} style={{ maxHeight: '98vh', overflowY: 'auto' }}>
         <div className="cart-header">
           <span className="cart-title">Shopping Cart ( {cartCount} items )</span>
           <button className="cart-close" onClick={() => { setCartOpen(false); setOrderSuccess(false); }}><X /></button>
@@ -83,12 +93,14 @@ const CartPanel = ({
             <p style={{ color: '#c026d3' }}>Thank you for your order. We will contact you soon!</p>
           </div>
         ) : showCheckoutDetails ? (
-          <form className="cart-checkout-form" onSubmit={handleDetailsSubmit} style={{ padding: 24 }}>
+          <form className="cart-checkout-form" onSubmit={handleDetailsSubmit} style={{ padding: 24, maxHeight: '80vh', overflowY: 'auto' }}>
             <h2>Enter Your Details</h2>
             <label>Name</label>
             <Input name="name" value={checkoutForm.name} onChange={handleDetailsChange} required />
             <label>Address</label>
             <Input name="address" value={checkoutForm.address} onChange={handleDetailsChange} required />
+            <label>Phone Number</label>
+            <Input name="phone" value={checkoutForm.phone} onChange={handleDetailsChange} required type="tel" pattern="[0-9]{7,}" placeholder="Enter your phone number" />
             <label>Note for Cake Customization</label>
             <textarea
               name="note"

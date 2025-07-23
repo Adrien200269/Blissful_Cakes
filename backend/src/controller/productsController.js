@@ -1,4 +1,4 @@
-const { Product } = require('../../models');
+const { Product } = require('../models');
 
 // GET /api/products
 const getAllProducts = async (req, res) => {
