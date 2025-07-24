@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+const token = localStorage.getItem('auth_token') || (window.Cookies && window.Cookies.get && window.Cookies.get('auth_token')) || '';import React, { useState } from 'react';
 import { X } from 'lucide-react';
 import { Input } from '../components/ui/input';
 import { Button } from '../components/ui/button';
@@ -45,11 +45,7 @@ const CartPanel = ({
     };
     console.log('Order payload:', orderData);
     try {
-      // Get token from localStorage or cookies
-      let token = '';
-      if (typeof window !== 'undefined') {
-        token = localStorage.getItem('auth_token') || (window.Cookies && window.Cookies.get && window.Cookies.get('auth_token')) || Cookies.get && Cookies.get('auth_token') || '';
-      }
+      const token = Cookies.get('auth_token');
       console.log('JWT token:', token);
       const res = await fetch('http://localhost:5000/api/orders', {
         method: 'POST',

@@ -15,7 +15,6 @@ const createOrder = async (req, res) => {
     if (!address || !phone) {
       return res.status(400).json({ success: false, message: 'Address and phone are required.' });
     }
-
     // Calculate total amount
     let totalAmount = 0;
     for (const item of products) {
@@ -33,7 +32,8 @@ const createOrder = async (req, res) => {
       phone,
       note
     });
-
+    console.log('Order created:', order);
+    
     // Create order items
     for (const item of products) {
       const product = await Product.findByPk(item.productId);
@@ -44,7 +44,6 @@ const createOrder = async (req, res) => {
         price: product.price
       });
     }
-
     res.status(201).json({ success: true, message: 'Order placed successfully', orderId: order.id });
   } catch (error) {
     console.error('Order creation error:', error);
@@ -90,5 +89,6 @@ const updateOrderStatus = async (req, res) => {
     res.status(500).json({ success: false, message: 'Internal server error' });
   }
 };
+
 
 module.exports = { createOrder, getAllOrders, updateOrderStatus }; 

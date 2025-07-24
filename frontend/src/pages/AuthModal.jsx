@@ -7,6 +7,7 @@ import SignUpForm from '../components/ui/SignUpForm';
 import ForgotPasswordForm from '../components/ui/ForgotPasswordForm';
 import AdminLoginForm from '../components/ui/AdminLoginForm';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const AuthModal = ({ setShowAuthModal, setUser, Cookies }) => {
   const [authMode, setAuthMode] = useState('signIn'); // 'signIn', 'signUp', 'admin'
@@ -27,55 +28,86 @@ const AuthModal = ({ setShowAuthModal, setUser, Cookies }) => {
     setAdminFormData({ ...adminFormData, [e.target.name]: e.target.value });
   };
 
-  const handleAuthSubmit = async (e) => {
-    console.log(formData);
-    
-    e.preventDefault();
-    setAuthMessage(null);
-    setAuthMessageType(null);
-    try {
-      const endpoint = authMode === 'signUp' ? 'http://localhost:5000/api/auth/register' : 'http://localhost:5000/api/auth/login';
-      const payload = authMode === 'signUp'
-        ? { username: formData.username, email: formData.email, password: formData.password }
-        : { email: formData.email, password: formData.password };
-      const res = await fetch(endpoint, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-      const data = await res.json();
-      if (!res.ok || !data.data || !data.data.token) {
-        setAuthMessage(data.message || 'Authentication failed');
-        setAuthMessageType('error');
-        return;
-      }
-      // Prevent admin login from user form
-      if (data.data.user.role === 'admin') {
-        setAuthMessage('Admins must use the Admin Login tab.');
-        setAuthMessageType('error');
-        return;
-      }
-      Cookies.set('auth_token', data.data.token, { expires: 7 });
-      Cookies.set('user', JSON.stringify(data.data.user), { expires: 7 });
-      setUser(data.data.user);
-      // Show welcome message for user login only
-      if (authMode === 'signIn') {
-        setAuthMessage(`Hello ${data.data.user.username || data.data.user.email} welcome to Blissful Cakes`);
-      } else {
-        setAuthMessage(authMode === 'signUp' ? 'Registration successful! Welcome!' : 'Login successful!');
-      }
-      setAuthMessageType('success');
-      setTimeout(() => {
-        setShowAuthModal(false);
-        setAuthMessage(null);
-        setAuthMessageType(null);
-      }, 1200);
-      setFormData({ username: '', email: '', password: '' });
-    } catch (err) {
-      setAuthMessage('An error occurred. Please try again.');
+
+const handleAuthSubmit = async (e) => {
+  console.log(formData);
+
+  e.preventDefault();
+  setAuthMessage(null);
+  setAuthMessageType(null);
+
+  try {
+    const endpoint =
+      authMode === 'signUp'
+        ? 'http://localhost:5000/api/auth/register'
+        : 'http://localhost:5000/api/auth/login';
+
+    const payload =
+      authMode === 'signUp'
+        ? {
+            username: formData.username,
+            email: formData.email,
+            password: formData.password,
+          }
+        : {
+            email: formData.email,
+            password: formData.password,
+          };
+
+    const res = await axios.post(endpoint, payload, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    const data = res.data;
+
+    if (!data.data || !data.data.token) {
+      setAuthMessage(data.message || 'Authentication failed');
       setAuthMessageType('error');
+      return;
     }
-  };
+
+    // Prevent admin login from user form
+    if (data.data.user.role === 'admin') {
+      setAuthMessage('Admins must use the Admin Login tab.');
+      setAuthMessageType('error');
+      return;
+    }
+
+    Cookies.set('auth_token', data.data.token, { expires: 7 });
+    Cookies.set('user', JSON.stringify(data.data.user), { expires: 7 });
+    setUser(data.data.user);
+
+    // Show welcome message for user login only
+    if (authMode === 'signIn') {
+      setAuthMessage(
+        `Hello ${data.data.user.username || data.data.user.email} welcome to Blissful Cakes`
+      );
+    } else {
+      setAuthMessage(
+        authMode === 'signUp'
+          ? 'Registration successful! Welcome!'
+          : 'Login successful!'
+      );
+    }
+
+    setAuthMessageType('success');
+
+    setTimeout(() => {
+      setShowAuthModal(false);
+      setAuthMessage(null);
+      setAuthMessageType(null);
+    }, 1200);
+
+    setFormData({ username: '', email: '', password: '' });
+  } catch (err) {
+    console.error(err); // helpful for debugging
+    setAuthMessage('An error occurred. Please try again.');
+    setAuthMessageType('error');
+  }
+};
+
 
   const handleAdminLogin = async (e) => {
     e.preventDefault();

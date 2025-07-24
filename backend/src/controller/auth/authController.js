@@ -63,6 +63,8 @@ const register = async (req, res) => {
 };
 
 const login = async (req, res) => {
+  console.log('Login attempt:', req.body); // Log the login attempt
+  
   try {
     const { email, password } = req.body;
 
@@ -109,7 +111,7 @@ const login = async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('Login error:', error);
+     console.error('Auth error:', error); // This will print the error stack
     res.status(500).json({
       success: false,
       message: 'Internal server error'
