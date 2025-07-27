@@ -1,8 +1,8 @@
 const express = require("express");
-const bodyParser = require("body-parser");
 const dotenv = require("dotenv");
 const cors = require("cors");
 const sequelize = require("./database");
+const { Order } = require("./models");
 
 // Load environment variables
 dotenv.config();
@@ -20,11 +20,12 @@ app.use(
         callback(new Error("Not allowed by CORS"));
       }
     },
-
     credentials: true,
   })
 );
+
 app.use(express.json());
+
 // Routes
 app.use("/api/auth", require("./route/auth/authRoute"));
 app.use("/api/user", require("./route/user/userRoute"));
@@ -44,8 +45,18 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: "Something went wrong!" });
 });
 
-app.listen(PORT, () => {
-  console.log(`server is listening in port ${PORT} `);
-});
+// Sync DB and start server
+async function startServer() {
+  try {
+    await sequelize.sync({ alter: true }); // sync all models at once (drops and recreates tables)
+    console.log("Database synced successfully");
 
-// sequelize.sync({ alter: true });
+    app.listen(PORT, () => {
+      console.log(`Server is listening on port ${PORT}`);
+    });
+  } catch (error) {
+    console.error("Unable to sync database:", error);
+  }
+}
+
+startServer();

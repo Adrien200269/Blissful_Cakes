@@ -2,6 +2,7 @@
 const {
   Model
 } = require('sequelize');
+const { all } = require('../route/uploadRoutes');
 
 module.exports = (sequelize, DataTypes) => {
   class Order extends Model {
@@ -17,7 +18,8 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Order.init({
-    userId: DataTypes.INTEGER,
+    userId:{ type:DataTypes.INTEGER,
+    allowNull: false},
     totalAmount: DataTypes.FLOAT,
     status: DataTypes.STRING,
     address: DataTypes.STRING,
@@ -26,6 +28,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Order',
+    tableName: 'Orders' // Force lowercase table name
   });
   return Order;
 };

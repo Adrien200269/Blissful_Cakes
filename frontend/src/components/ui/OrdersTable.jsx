@@ -67,7 +67,8 @@ const OrdersTable = () => {
       setStatusMessageType("error");
     }
   };
-
+  console.log(orders);
+  
   return (
     <div>
       {statusMessage && (
@@ -114,14 +115,15 @@ const OrdersTable = () => {
                     {order.user?.email || order.userId}
                   </td>
                   <td className="admin-table-cell">
-                    {order.products && order.products.length > 0
-                      ? order.products
-                          .map(
-                            (item) => `${item.name} x${item.OrderItem.quantity}`
-                          )
-                          .join(", ")
-                      : ""}
-                  </td>
+  {order.orderItems && order.orderItems.length > 0
+    ? order.orderItems
+        .map((item) => {
+          console.log(item);
+          return `${item.Product.name}`;
+        })
+        .join(",")
+    : ""}
+</td>
                   <td className="admin-table-cell">Rs {order.totalAmount}</td>
                   <td className="admin-table-cell">
                     <select

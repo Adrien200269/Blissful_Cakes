@@ -1,4 +1,5 @@
 const db = require("../models");
+const order = require("../models/order");
 const { Order, OrderItem, User, Product } = db;
 
 // Create a new order
@@ -42,14 +43,20 @@ const createOrder = async (req, res) => {
     });
     console.log("Order created:", order);
 
-    // Create order items
     for (const item of products) {
-      const product = await Product.findByPk(item.productId);
+      console.log("Creating order item for product:", item);   
+console.log({
+  orderId: order.id,
+  productId: item.productId,
+  quantity: item.quantity,
+  // price: product.price,
+});
       await OrderItem.create({
-        orderId: order.id,
+        OrderId: order.id,
+        ProductId: item.productId,
         productId: item.productId,
         quantity: item.quantity,
-        price: product.price,
+        price: totalAmount,
       });
     }
     res.status(201).json({
@@ -69,14 +76,30 @@ const getAllOrders = async (req, res) => {
     const orders = await Order.findAll({
       include: [
         { model: User, attributes: { exclude: ["password"] } },
-        {
-          model: Product,
-          through: { attributes: ["quantity", "price"] },
-        },
       ],
       order: [["createdAt", "DESC"]],
     });
-    res.json({ success: true, orders });
+    if (!orders || orders.length === 0) {
+      return res.status(404).json({ success: false, message: "No orders found" });
+    }
+
+    // For each order, fetch its orderItems
+    const ordersWithItems = await Promise.all(
+      orders.map(async (order) => {
+        const orderItems = await OrderItem.findAll({
+          where: { OrderId: order.id },
+          include: [
+            { model: Product },
+          ],
+        });
+        return {
+          ...order.toJSON(),
+          orderItems,
+        };
+      })
+    );
+
+    res.json({ success: true, orders: ordersWithItems });
   } catch (error) {
     console.error("Get orders error:", error);
     res.status(500).json({ success: false, message: "Internal server error" });
