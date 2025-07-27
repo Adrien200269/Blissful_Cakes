@@ -25,8 +25,8 @@ const AboutUs = () => (
           </p>
           <p>
             Stay connected with us on Instagram 
-            <a href="https://www.instagram.com/blissfulcakes_pokhara" target="_blank" rel="noopener noreferrer" style={{ color: "#b53471", textDecoration: "underline", marginLeft: "4px" }}>
-              @blissfulcakes_pokhara
+            <a href="https://www.instagram.com/blissful_cakes_pokhara" target="_blank" rel="noopener noreferrer" style={{ color: "#b53471", textDecoration: "underline", marginLeft: "4px" }}>
+              @blissful_cakes_pokhara
             </a> 
             and 
             <a href="https://www.instagram.com/pragati_bij_shr/" target="_blank" rel="noopener noreferrer" style={{ color: "#b53471", textDecoration: "underline", marginLeft: "4px" }}>
@@ -42,12 +42,12 @@ const AboutUs = () => (
             <p>
               <strong>Instagram:</strong>
               <a
-                href="https://www.instagram.com/blissfulcakes_pokhara"
+                href="https://www.instagram.com/blissful_cakes_pokhara"
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{ color: "#b53471", textDecoration: "underline", marginLeft: "6px" }}
               >
-                @blissfulcakes_pokhara
+                @blissful_cakes_pokhara
               </a>
             </p>
             <p><strong>Location:</strong> Pokhara, Nepal</p>
