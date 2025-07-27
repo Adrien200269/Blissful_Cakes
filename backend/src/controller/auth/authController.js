@@ -1,22 +1,24 @@
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const { User } = require('../../models');
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const { User } = require("../../models");
 
 const register = async (req, res) => {
   try {
-    const { username, email, password} = req.body;
+    console.log(req.body);
+
+    const { username, email, password } = req.body;
 
     // Check if user already exists
     const existingUser = await User.findOne({
       where: {
-        email
-      }
+        email,
+      },
     });
 
     if (existingUser) {
       return res.status(400).json({
         success: false,
-        message: 'User with this email or username already exists'
+        message: "User with this email or username already exists",
       });
     }
 
@@ -34,13 +36,13 @@ const register = async (req, res) => {
     // Generate JWT token
     const token = jwt.sign(
       { userId: user.id, email: user.email },
-      process.env.JWT_SECRET || 'your-secret-key',
-      { expiresIn: '24h' }
+      process.env.JWT_SECRET || "your-secret-key",
+      { expiresIn: "24h" }
     );
 
     res.status(201).json({
       success: true,
-      message: 'User registered successfully',
+      message: "User registered successfully",
       data: {
         user: {
           id: user.id,
@@ -48,23 +50,23 @@ const register = async (req, res) => {
           email: user.email,
           firstName: user.firstName,
           lastName: user.lastName,
-          role: user.role
+          role: user.role,
         },
-        token
-      }
+        token,
+      },
     });
   } catch (error) {
-    console.error('Registration error:', error);
+    console.error("Registration error:", error);
     res.status(500).json({
       success: false,
-      message: 'Internal server error'
+      message: "Internal server error",
     });
   }
 };
 
 const login = async (req, res) => {
-  console.log('Login attempt:', req.body); // Log the login attempt
-  
+  console.log("Login attempt:", req.body); // Log the login attempt
+
   try {
     const { email, password } = req.body;
 
@@ -74,7 +76,7 @@ const login = async (req, res) => {
     if (!user) {
       return res.status(401).json({
         success: false,
-        message: 'Invalid credentials'
+        message: "Invalid credentials",
       });
     }
 
@@ -84,20 +86,20 @@ const login = async (req, res) => {
     if (!isPasswordValid) {
       return res.status(401).json({
         success: false,
-        message: 'Invalid credentials'
+        message: "Invalid credentials",
       });
     }
 
     // Generate JWT token
     const token = jwt.sign(
       { userId: user.id, email: user.email },
-      process.env.JWT_SECRET || 'your-secret-key',
-      { expiresIn: '24h' }
+      process.env.JWT_SECRET || "your-secret-key",
+      { expiresIn: "24h" }
     );
 
     res.json({
       success: true,
-      message: 'Login successful',
+      message: "Login successful",
       data: {
         user: {
           id: user.id,
@@ -105,21 +107,21 @@ const login = async (req, res) => {
           email: user.email,
           firstName: user.firstName,
           lastName: user.lastName,
-          role: user.role
+          role: user.role,
         },
-        token
-      }
+        token,
+      },
     });
   } catch (error) {
-     console.error('Auth error:', error); // This will print the error stack
+    console.error("Auth error:", error); // This will print the error stack
     res.status(500).json({
       success: false,
-      message: 'Internal server error'
+      message: "Internal server error",
     });
   }
 };
 
 module.exports = {
   register,
-  login
-}; 
+  login,
+};
