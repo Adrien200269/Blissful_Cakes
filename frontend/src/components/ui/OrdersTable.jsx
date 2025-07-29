@@ -45,7 +45,7 @@ const OrdersTable = () => {
     setStatusMessageType(null);
     try {
       const token = Cookies.get("auth_token");
-      const res = await fetch(`/api/orders/${orderId}/status`, {
+      const res = await fetch(`http://localhost:5000/api/orders/${orderId}/status`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
