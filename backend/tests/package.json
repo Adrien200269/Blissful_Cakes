@@ -1,0 +1,45 @@
+{
+  "name": "blissful-cakes-tests",
+  "version": "1.0.0",
+  "description": "API Testing Suite for Blissful Cakes Backend",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "test:auth": "jest auth.test.js",
+    "test:products": "jest products.test.js",
+    "test:orders": "jest orders.test.js",
+    "test:users": "jest users.test.js",
+    "test:simple": "jest simple.test.js",
+    "test:basic": "jest basic.test.js",
+    "test:minimal": "jest minimal.test.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.3.1",
+    "supertest": "^6.3.3",
+    "express": "^5.1.0",
+    "cors": "^2.8.5",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.2",
+    "sequelize": "^6.37.7",
+    "pg": "^8.16.3",
+    "pg-hstore": "^2.3.4"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "setupFilesAfterEnv": [
+      "<rootDir>/setup.js"
+    ],
+    "testTimeout": 10000,
+    "verbose": true,
+    "collectCoverageFrom": [
+      "**/*.{js,jsx}",
+      "!**/node_modules/**",
+      "!**/coverage/**"
+    ]
+  },
+  "devDependencies": {
+    "jest": "^30.0.5"
+  }
+}
