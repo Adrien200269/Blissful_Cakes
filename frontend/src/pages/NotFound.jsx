@@ -7,13 +7,11 @@ import './NotFound.css';
 function NotFound() {
   return (
     <div className="notfound-container">
-      {/* Decorative elements */}
       <div className="notfound-decorative notfound-decorative-1"></div>
       <div className="notfound-decorative notfound-decorative-2"></div>
       <div className="notfound-decorative notfound-decorative-3"></div>
 
       <div className="notfound-card">
-        {/* Logo */}
         <div className="notfound-logo-container">
           <img 
             src={blissfulLogo} 
@@ -23,17 +21,14 @@ function NotFound() {
           <Cake size={40} color="#ec4899" />
         </div>
 
-        {/* 404 Number */}
         <div className="notfound-404">
           404
         </div>
 
-        {/* Title */}
         <h1 className="notfound-title">
           Oops! Page Not Found
         </h1>
 
-        {/* Description */}
         <p className="notfound-description">
           The page you're looking for seems to have wandered off to the bakery. 
           Don't worry, we'll help you find your way back to our delicious treats!

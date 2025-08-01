@@ -50,7 +50,6 @@ const LandingPage = ({ favorites, toggleFavorite, handleAddToCart, user, refresh
 
   return (
     <>
-      {/* Hero Section */}
       <section className="hero">
         <div className="hero-container">
           <h1 className="hero-title" style={{fontFamily: 'Times New Roman, serif'}}>

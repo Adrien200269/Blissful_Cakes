@@ -13,18 +13,15 @@ import AuthModal from './pages/AuthModal';
 import NotFound from './pages/NotFound';
 import AdminPage from './pages/AdminPage';
 
-// ProtectedRoute for admin dashboard
 function ProtectedAdminRoute({ user, children }) {
   const location = useLocation();
   if (!user || user.role !== 'admin') {
-    // Not logged in as admin, redirect to home or admin login modal
     return <Navigate to="/" state={{ from: location }} replace />;
   }
   return children;
 }
 
 const App = () => {
-  // Global state only
   const [user, setUser] = useState(null);
   const [cartItems, setCartItems] = useState([]);
   const [cartOpen, setCartOpen] = useState(false);
@@ -72,7 +69,6 @@ const App = () => {
     setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
   };
 
-  // Only global handlers
   const handleAddToCart = (item) => {
     if (showCartWarning) setShowCartWarning(false);
     setCartItems((prev) => {
@@ -104,7 +100,6 @@ const App = () => {
     );
   };
 
-  // Cart total
   const cartTotal = cartItems.reduce((sum, i) => sum + (i.price * i.quantity), 0);
   const cartCount = cartItems.reduce((sum, i) => sum + i.quantity, 0);
 
@@ -123,18 +118,14 @@ const App = () => {
     setOrderDetails(checkoutForm);
     setShowCheckoutDetails(false);
     setOrderSuccess(true);
-    // Optionally close cart after a delay
-    // setTimeout(() => setCartOpen(false), 2000);
   };
 
-  // Add logout handler
   const handleLogout = () => {
     Cookies.remove('auth_token');
     Cookies.remove('user');
     setUser(null);
   };
 
-  // Add handler for forgot password submit
   const handleForgotPasswordSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -143,7 +134,6 @@ const App = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: forgotPasswordEmail })
       });
-      // Always show the same message for security
       setForgotPasswordSent(true);
     } catch (err) {
       setForgotPasswordSent(true);
@@ -165,11 +155,9 @@ const App = () => {
             </div>
           </div>
         )}
-        {/* Auth Modal */}
         {showAuthModal && (
           <AuthModal setShowAuthModal={setShowAuthModal} setUser={setUser} Cookies={Cookies} />
         )}
-        {/* Cart Side Panel */}
         <CartPanel
           cartItems={cartItems}
           setCartItems={setCartItems}
@@ -191,11 +179,9 @@ const App = () => {
           user={user}
           handleLogout={handleLogout}
         />
-        {/* Header */}
         <header className="header">
           <div className="header-container">
             <div className="header-content">
-              {/* Logo */}
               <div className="logo-section">
                 <img 
                   src={blissfulLogo} 
@@ -203,12 +189,10 @@ const App = () => {
                   className="logo-image"
                 />
               </div>
-              {/* Navigation */}
               <nav className="nav">
                 <Link to="/" className="nav-link active">Home</Link>
                 <Link to="/about" className="nav-link">About Us</Link>
               </nav>
-              {/* Right Side (cart, sign in, etc.) */}
               <div className="header-actions">
                 <button className="cart-button" onClick={() => setCartOpen(true)}>
                   <ShoppingCart className="w-5 h-5" />
@@ -243,9 +227,7 @@ const App = () => {
             </div>
           </div>
         </header>
-        {/* Page Content */}
         <Routes>
-          {/* If admin is logged in, redirect from landing page to /admin */}
           <Route path="/" element={user && user.role === 'admin' ? <Navigate to="/admin" replace /> : <LandingPage favorites={favorites} toggleFavorite={toggleFavorite} handleAddToCart={handleAddToCart} user={user} />} />
           <Route path="/about" element={<AboutUs />} />
           <Route path="/admin" element={
@@ -255,7 +237,6 @@ const App = () => {
           } />
           <Route path="*" element={<NotFound />} />
         </Routes>
-        {/* Footer */}
         <footer className="footer">
           <div className="footer-container">
             <div className="footer-grid">

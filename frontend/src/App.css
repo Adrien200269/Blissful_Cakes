@@ -1,4 +1,3 @@
-/* Base styles and utilities */
 * {
   box-sizing: border-box;
 }
@@ -8,6 +7,7 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   overflow-x: hidden;
 }
+
 
 :root {
   --color-bg: #fdf2f8;
@@ -38,16 +38,13 @@ body, .main-container, .admin-dashboard-bg, .form-card, .modal, .admin-dashboard
   background: var(--color-card);
 }
 
-/* Main container */
 .main-container {
   min-height: 100vh;
   width: 100vw;
-  /* Remove hardcoded background, use variable only */
   background: var(--color-bg);
   position: relative;
 }
 
-/* Decorative elements */
 .decorative-elements {
   position: absolute;
   top: 0;
